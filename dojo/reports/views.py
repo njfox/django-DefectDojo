@@ -42,13 +42,11 @@ def report_url_resolver(request):
     try:
         url_resolver = request.META['HTTP_X_FORWARDED_PROTO'] + "://" +  request.META['HTTP_X_FORWARDED_FOR']
     except:
-        hostname = request.META['HTTP_HOST']
-        port_index = hostname.find(":")
-        if port_index != -1:
-            url_resolver = request.scheme + "://" + hostname[:port_index]
+        hostname = request.META['SERVER_NAME']
+        if hostname == '':
+            return request.scheme + "://" + "localhost:" + request.META['SERVER_PORT']
         else:
-            url_resolver = request.scheme + "://" + hostname
-    return url_resolver + ":" + request.META['SERVER_PORT']
+            return request.scheme + "://" + hostname + ":" + request.META['SERVER_PORT']
 
 
 def report_builder(request):
